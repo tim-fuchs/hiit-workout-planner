@@ -1,8 +1,8 @@
 ---
 name: Bug report
 about: Create a report to help us improve
-title: ''
-labels: ''
+title: 'fix(<optional-scope>): prevent/remove/etc. <bug-description>'
+labels: 'bug'
 assignees: ''
 
 ---

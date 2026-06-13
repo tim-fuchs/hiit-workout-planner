@@ -1,7 +1,7 @@
 ---
 name: Feature request
 about: Suggest an idea for this project
-title: ''
+title: 'feat(<optional-scope>): add <feature-description>'
 labels: ''
 assignees: ''
 
