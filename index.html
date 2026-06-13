@@ -1,130 +1,81 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="color-scheme" content="light dark" />
-    <meta
-      name="description"
-      content="Generate customizable high-intensity interval trainings"
-    />
-    <title>HIIT Workout Planner</title>
 
-    <link rel="icon" href="assets/favicon.ico" type="image/x-icon" />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
-    />
-    <link rel="stylesheet" href="css/app.css" />
-    <script src="js/utils/config.js"></script>
-    <script src="js/utils/error-handler.js"></script>
-    <script src="js/utils/validator.js"></script>
-    <script src="js/services/exercise-service.js"></script>
-    <script src="js/services/workout-service.js"></script>
-    <script src="js/controllers/ui-controller.js"></script>
-    <script src="js/app.js"></script>
-  </head>
-  <body>
-    <header class="container">
-      <hgroup>
-        <br />
-        <h1>HIIT Workout Planner 💪</h1>
-        <p>
-          Generate customizable
-          <strong>high-intensity interval trainings</strong>
-        </p>
-      </hgroup>
-    </header>
-    <main class="container">
-      <section>
-        <form id="workoutForm">
-          <details name="configuration">
-            <summary role="button" class="outline">Configuration</summary>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="description" content="Generate customizable high-intensity interval trainings" />
+  <title>HIIT Workout Planner</title>
 
-            <fieldset class="container">
-              <fieldset>
-                <legend><strong>Exercise categories:</strong></legend>
-                <div id="exerciseCategories"></div>
-              </fieldset>
+  <link rel="icon" href="assets/icons/favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" />
+  <link rel="stylesheet" href="css/app.css" />
+  <script src="js/utils/config.js"></script>
+  <script src="js/utils/error-handler.js"></script>
+  <script src="js/utils/validator.js"></script>
+  <script src="js/services/exercise-service.js"></script>
+  <script src="js/services/workout-service.js"></script>
+  <script src="js/controllers/ui-controller.js"></script>
+  <script src="js/app.js"></script>
+</head>
 
-              <label for="rounds"
-                ><strong>Total number of rounds:</strong></label
-              >
-              <fieldset role="group">
-                <input
-                  type="number"
-                  id="rounds"
-                  name="rounds"
-                  min="1"
-                  value="10"
-                  required
-                />
-                <input
-                  type="button"
-                  id="roundsDecrease"
-                  class="secondary"
-                  value="-"
-                />
-                <input
-                  type="button"
-                  id="roundsIncrease"
-                  class="secondary"
-                  value="+"
-                  aria-current="true"
-                />
-              </fieldset>
-
-              <label for="categoryChange"
-                ><strong>Rounds before category change:</strong></label
-              >
-              <fieldset role="group">
-                <input
-                  type="number"
-                  id="categoryChange"
-                  name="categoryChange"
-                  min="1"
-                  value="1"
-                  required
-                />
-                <input
-                  type="button"
-                  id="categoryChangeDecrease"
-                  class="secondary"
-                  value="-"
-                />
-                <input
-                  type="button"
-                  id="categoryChangeIncrease"
-                  class="secondary"
-                  value="+"
-                  aria-current="true"
-                />
-              </fieldset>
-            </fieldset>
-          </details>
-
-          <details name="workout" open>
-            <summary role="button" id="submit">Generate Workout</summary>
-            <section>
-              <div id="workoutOutput"></div>
-            </section>
-          </details>
-        </form>
-        <div id="errorMessages"></div>
-      </section>
-    </main>
-    <footer class="container">
+<body>
+  <header class="container">
+    <hgroup>
+      <br />
+      <h1>HIIT Workout Planner 💪</h1>
       <p>
-        <small
-          >View project on
-          <a
-            href="https://github.com/tim-puhlfuerss/HIIT-Planner"
-            target="_blank"
-            >GitHub</a
-          >. Built with
-          <a href="https://picocss.com" target="_blank">Pico</a>.</small
-        >
+        Generate customizable
+        <strong>high-intensity interval trainings</strong>
       </p>
-    </footer>
-  </body>
+    </hgroup>
+  </header>
+  <main class="container">
+    <section>
+      <form id="workoutForm">
+        <details name="configuration">
+          <summary role="button" class="outline">Configuration</summary>
+
+          <fieldset class="container">
+            <fieldset>
+              <legend><strong>Exercise categories:</strong></legend>
+              <div id="exerciseCategories"></div>
+            </fieldset>
+
+            <label for="rounds"><strong>Total number of rounds:</strong></label>
+            <fieldset role="group">
+              <input type="number" id="rounds" name="rounds" min="1" value="10" required />
+              <input type="button" id="roundsDecrease" class="secondary" value="-" />
+              <input type="button" id="roundsIncrease" class="secondary" value="+" aria-current="true" />
+            </fieldset>
+
+            <label for="categoryChange"><strong>Rounds before category change:</strong></label>
+            <fieldset role="group">
+              <input type="number" id="categoryChange" name="categoryChange" min="1" value="1" required />
+              <input type="button" id="categoryChangeDecrease" class="secondary" value="-" />
+              <input type="button" id="categoryChangeIncrease" class="secondary" value="+" aria-current="true" />
+            </fieldset>
+          </fieldset>
+        </details>
+
+        <details name="workout" open>
+          <summary role="button" id="submit">Generate Workout</summary>
+          <section>
+            <div id="workoutOutput"></div>
+          </section>
+        </details>
+      </form>
+      <div id="errorMessages"></div>
+    </section>
+  </main>
+  <footer class="container">
+    <p>
+      <small>View project on
+        <a href="https://github.com/tim-puhlfuerss/HIIT-Planner" target="_blank">GitHub</a>. Built with
+        <a href="https://picocss.com" target="_blank">Pico</a>.</small>
+    </p>
+  </footer>
+</body>
+
 </html>
