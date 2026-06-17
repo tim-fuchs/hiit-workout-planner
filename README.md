@@ -33,7 +33,9 @@ Try the [live version](https://tim-fuchs.github.io/hiit-workout-planner/ "Live V
 
 ## Testing
 
-*Coming soon*
+```bash
+npm test
+```
 
 ## Deployment
 
