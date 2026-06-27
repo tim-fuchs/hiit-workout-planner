@@ -1,0 +1,16 @@
+{
+    "exerciseCategories": [
+        {
+            "name": "Chest + Arms",
+            "emoji": "💪"
+        },
+        {
+            "name": "Abs",
+            "emoji": "🧘"
+        },
+        {
+            "name": "Legs",
+            "emoji": "🦵"
+        }
+    ]
+}

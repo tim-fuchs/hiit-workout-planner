@@ -1,0 +1,79 @@
+{
+    "exercises": [
+        {
+            "name": "Push-ups",
+            "description": "A basic exercise to strengthen the chest, shoulders, and triceps.",
+            "category": "Chest + Arms"
+        },
+        {
+            "name": "Tricep Dips",
+            "description": "An exercise targeting the triceps, performed on a bench or chair.",
+            "category": "Chest + Arms"
+        },
+        {
+            "name": "Bicep Curls",
+            "description": "A strength training exercise for the biceps using dumbbells.",
+            "category": "Chest + Arms"
+        },
+        {
+            "name": "Standing Chest/Shoulder Press",
+            "description": "An exercise to strengthen the shoulders and upper chest.",
+            "category": "Chest + Arms"
+        },
+        {
+            "name": "Shoulder Lifts",
+            "description": "An exercise to target the shoulder muscles.",
+            "category": "Chest + Arms"
+        },
+        {
+            "name": "Sit-ups",
+            "description": "An exercise to strengthen the abdominal muscles by lifting the upper body towards the knees.",
+            "category": "Abs"
+        },
+        {
+            "name": "Bicycle Crunches",
+            "description": "A core exercise that combines a crunch with a pedaling motion.",
+            "category": "Abs"
+        },
+        {
+            "name": "Russian Twists",
+            "description": "An exercise that targets the obliques by twisting the torso while seated.",
+            "category": "Abs"
+        },
+        {
+            "name": "Spiderman",
+            "description": "A dynamic exercise that combines a plank with a knee drive towards the elbow.",
+            "category": "Abs"
+        },
+        {
+            "name": "Leg Raises",
+            "description": "An exercise to strengthen the lower abdominal muscles by lifting the legs while lying down.",
+            "category": "Abs"
+        },
+        {
+            "name": "Squats",
+            "description": "A fundamental exercise that targets the quadriceps, hamstrings, and glutes.",
+            "category": "Legs"
+        },
+        {
+            "name": "Wide Squats",
+            "description": "A variation of squats that targets the inner thighs and glutes.",
+            "category": "Legs"
+        },
+        {
+            "name": "Lunges Left",
+            "description": "An exercise that targets the legs by stepping forward with one leg and lowering the body.",
+            "category": "Legs"
+        },
+        {
+            "name": "Lunges Right",
+            "description": "Similar to lunges left, but stepping forward with the right leg.",
+            "category": "Legs"
+        },
+        {
+            "name": "Calf Raises",
+            "description": "An exercise to strengthen the calf muscles by raising the heels off the ground.",
+            "category": "Legs"
+        }
+    ]
+}
