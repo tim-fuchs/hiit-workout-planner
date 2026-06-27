@@ -10,3 +10,7 @@ table.exercise-list td {
     border-radius: 0.25rem;
     background-color: rgba(255, 0, 0, 0.1);
 }
+
+#submit {
+    text-align: left;
+}

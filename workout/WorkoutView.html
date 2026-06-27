@@ -1,0 +1,31 @@
+<section>
+    <form id="workoutForm">
+        <details name="configuration">
+            <summary role="button" class="outline">Configuration</summary>
+
+            <fieldset class="container">
+                <fieldset>
+                    <legend><strong>Exercise categories:</strong></legend>
+                    <div id="exerciseCategories"></div>
+                </fieldset>
+
+                <label for="rounds"><strong>Total number of rounds:</strong></label>
+                <fieldset role="group">
+                    <input type="number" id="rounds" name="rounds" required />
+                    <input type="button" id="roundsDecrease" class="secondary" value="-" />
+                    <input type="button" id="roundsIncrease" class="secondary" value="+" aria-current="true" />
+                </fieldset>
+
+                <label for="categoryChange"><strong>Rounds before category change:</strong></label>
+                <fieldset role="group">
+                    <input type="number" id="categoryChange" name="categoryChange" required />
+                    <input type="button" id="categoryChangeDecrease" class="secondary" value="-" />
+                    <input type="button" id="categoryChangeIncrease" class="secondary" value="+" aria-current="true" />
+                </fieldset>
+            </fieldset>
+        </details>
+        <input type="submit" id="submit" class="primary" value="Generate Workout" aria-current="true" />
+    </form>
+    <div id="errorMessages"></div>
+    <div id="workoutOutput"></div>
+</section>

@@ -4,7 +4,7 @@ Generate flexible HIIT workouts in seconds.
 
 Try the [live version](https://tim-fuchs.github.io/hiit-workout-planner/ "Live Version") and generate a high-intensity interval training with just one click.
 
-<img src="assets/gifs/demo.gif" width="20%" />
+<img src="assets/gifs/Demo.gif" width="40%" />
 
 ## Features
 
