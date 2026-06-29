@@ -6,26 +6,26 @@
             <fieldset class="container">
                 <fieldset>
                     <legend><strong>Exercise categories:</strong></legend>
-                    <div id="exerciseCategories"></div>
+                    <div id="exerciseCategories" aria-label="Exercise categories"></div>
                 </fieldset>
 
                 <label for="rounds"><strong>Total number of rounds:</strong></label>
                 <fieldset role="group">
                     <input type="number" id="rounds" name="rounds" required />
-                    <input type="button" id="roundsDecrease" class="secondary" value="-" />
-                    <input type="button" id="roundsIncrease" class="secondary" value="+" aria-current="true" />
+                    <button type="button" id="roundsDecrease" class="secondary" aria-label="Decrease total number of rounds">-</button>
+                    <button type="button" id="roundsIncrease" class="secondary" aria-label="Increase total number of rounds">+</button>
                 </fieldset>
 
                 <label for="categoryChange"><strong>Rounds before category change:</strong></label>
                 <fieldset role="group">
                     <input type="number" id="categoryChange" name="categoryChange" required />
-                    <input type="button" id="categoryChangeDecrease" class="secondary" value="-" />
-                    <input type="button" id="categoryChangeIncrease" class="secondary" value="+" aria-current="true" />
+                    <button type="button" id="categoryChangeDecrease" class="secondary" aria-label="Decrease rounds before category change">-</button>
+                    <button type="button" id="categoryChangeIncrease" class="secondary" aria-label="Increase rounds before category change">+</button>
                 </fieldset>
             </fieldset>
         </details>
-        <input type="submit" id="submit" class="primary" value="Generate Workout" aria-current="true" />
+        <button type="submit" id="submit" class="primary">Generate Workout</button>
     </form>
-    <div id="errorMessages"></div>
-    <div id="workoutOutput"></div>
+    <div id="errorMessages" aria-live="polite"></div>
+    <div id="workoutOutput" aria-live="polite"></div>
 </section>

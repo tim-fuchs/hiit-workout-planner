@@ -1,30 +1,30 @@
 /**
- * Configuration constants and default values.
+ * Configuration constants (default values, numeric limits, asset paths)
  *
  * @namespace CONFIG
  */
 export const CONFIG = {
-  /** @type {number} Default number of workout rounds when none specified */
+  /** @type {number} Default workout rounds */
   DEFAULT_ROUNDS: 10,
 
-  /** @type {number} Minimum allowed number of workout rounds */
+  /** @type {number} Minimum workout rounds */
   MIN_ROUNDS: 1,
 
-  /** @type {number} Maximum allowed number of workout rounds */
+  /** @type {number} Maximum workout rounds */
   MAX_ROUNDS: 100,
 
-  /** @type {number} Default number of workout rounds before changing the exercise category */
+  /** @type {number} Default rounds before changing the exercise category */
   DEFAULT_CATEGORY_CHANGE: 1,
 
-  /** @type {number} Minimum allowed workout rounds before changing the exercise category */
+  /** @type {number} Minimum rounds before changing the exercise category */
   MIN_CATEGORY_CHANGE: 1,
 
-  /** @type {number} Maximum allowed workout rounds before changing the exercise category */
+  /** @type {number} Maximum rounds before changing the exercise category */
   MAX_CATEGORY_CHANGE: 100,
 
-  /** @type {string} Path to the JSON file containing the exercise categories */
+  /** @type {string} Path to the exercise categories JSON file */
   CATEGORIES_FILE: "./assets/json/ExerciseCategories.json",
 
-  /** @type {string} Path to the JSON file containing the exercises */
+  /** @type {string} Path to the exercises JSON file */
   EXERCISES_FILE: "./assets/json/Exercises.json",
 };

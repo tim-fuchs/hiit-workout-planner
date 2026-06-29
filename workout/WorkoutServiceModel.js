@@ -2,152 +2,208 @@ import { CONFIG } from "../js/Config.js";
 import { ExerciseEntityModel } from "./ExerciseEntityModel.js";
 import { ExerciseCategoryValueModel } from "./ExerciseCategoryValueModel.js";
 
+/**
+ * Service for loading workout data, managing workout settings,
+ * validating configuration, and generating workout sequences
+ */
 export class WorkoutServiceModel {
+  #selectedExerciseCategories;
+  #selectedExerciseRounds = CONFIG.DEFAULT_ROUNDS;
+  #selectedCategoryChange = CONFIG.DEFAULT_CATEGORY_CHANGE;
+  #availableExercises;
+
+  /**
+   * Creates a new workout service instance
+   *
+   * @class
+   */
   constructor() {
-    this.selectedExerciseCategories = this.readExerciseCategoriesFromDb();
-    this.selectedExerciseRounds = CONFIG.DEFAULT_ROUNDS;
-    this.selectedCategoryChange = CONFIG.DEFAULT_CATEGORY_CHANGE;
-    this.availableExercises = this.readExercisesFromDb();
+    this.#selectedExerciseCategories = this.loadExerciseCategoriesFromDb();
+    this.#availableExercises = this.loadExercisesFromDb();
   }
 
-  async readExerciseCategoriesFromDb() {
-    return fetch(CONFIG.CATEGORIES_FILE)
-      .then((response) => response.json())
-      .then((json) => this.sanitizeJSONObject(json))
-      .then((json) => {
-        let categories = [];
-        json.exerciseCategories.forEach((cat) => {
-          categories.push(new ExerciseCategoryValueModel(cat.name, cat.emoji));
-        });
+  /**
+   * Loads and sanitizes exercise categories from the database (JSON file)
+   *
+   * @returns {Promise<ExerciseCategoryValueModel[]>}
+   */
+  async loadExerciseCategoriesFromDb() {
+    const response = await fetch(CONFIG.CATEGORIES_FILE);
+    const json = this.#sanitizeJSON(await response.json());
 
-        return categories;
-      });
+    return json.exerciseCategories.map(
+      (cat) => new ExerciseCategoryValueModel(cat.name, cat.emoji),
+    );
   }
 
+  /**
+   * Gets the selected exercise categories
+   *
+   * @returns {Promise<ExerciseCategoryValueModel[]>}
+   */
   getExerciseCategories() {
-    return this.selectedExerciseCategories;
+    return this.#selectedExerciseCategories;
   }
 
+  /**
+   * Toggles whether a category is included in the selected workout categories
+   *
+   * @param {ExerciseCategoryValueModel} selectedCategory Category to add or remove
+   * @returns {Promise<void>}
+   */
   async updateExerciseCategories(selectedCategory) {
-    let categories = await this.selectedExerciseCategories;
+    const categories = await this.#selectedExerciseCategories;
+    const index = categories.indexOf(selectedCategory);
 
-    if (categories.includes(selectedCategory)) {
-      categories.splice(categories.indexOf(selectedCategory), 1);
+    if (index >= 0) {
+      categories.splice(index, 1);
     } else {
       categories.push(selectedCategory);
     }
   }
 
+  /**
+   * Gets the current number of exercise rounds
+   *
+   * @returns {number}
+   */
   getExerciseRounds() {
-    return this.selectedExerciseRounds;
+    return this.#selectedExerciseRounds;
   }
 
+  /**
+   * Sets the number of exercise rounds, limited to configured thresholds
+   *
+   * @param {number} rounds Requested number of rounds
+   * @returns {void}
+   */
   setExerciseRounds(rounds) {
-    const newRounds = Number(rounds);
+    const newValue = Number(rounds);
 
-    if (Number.isInteger(newRounds)) {
-      if (newRounds >= CONFIG.MIN_ROUNDS && newRounds <= CONFIG.MAX_ROUNDS) {
-        this.selectedExerciseRounds = newRounds;
-      } else if (newRounds < CONFIG.MIN_ROUNDS) {
-        this.selectedExerciseRounds = CONFIG.MIN_ROUNDS;
-      } else {
-        this.selectedExerciseRounds = CONFIG.MAX_ROUNDS;
-      }
-    }
+    if (!Number.isInteger(newValue)) return;
+
+    this.#selectedExerciseRounds = Math.min(
+      Math.max(newValue, CONFIG.MIN_ROUNDS),
+      CONFIG.MAX_ROUNDS,
+    );
   }
 
+  /**
+   * Increases the number of exercise rounds by one, limited to configured thresholds.
+   * Returns the new number.
+   *
+   * @returns {number}
+   */
   increaseExerciseRounds() {
-    if (this.selectedExerciseRounds < CONFIG.MAX_ROUNDS) {
-      this.selectedExerciseRounds = this.selectedExerciseRounds + 1;
+    if (this.#selectedExerciseRounds < CONFIG.MAX_ROUNDS) {
+      this.#selectedExerciseRounds += 1;
     }
-    return this.selectedExerciseRounds;
+    return this.#selectedExerciseRounds;
   }
 
+  /**
+   * Decreases the number of exercise rounds by one, limited to configured thresholds.
+   * Returns the new number.
+   *
+   * @returns {number}
+   */
   decreaseExerciseRounds() {
-    if (this.selectedExerciseRounds > CONFIG.MIN_ROUNDS) {
-      this.selectedExerciseRounds = this.selectedExerciseRounds - 1;
+    if (this.#selectedExerciseRounds > CONFIG.MIN_ROUNDS) {
+      this.#selectedExerciseRounds -= 1;
     }
-    return this.selectedExerciseRounds;
+    return this.#selectedExerciseRounds;
   }
 
+  /**
+   * Gets the rounds-before-category-change value
+   *
+   * @returns {number}
+   */
   getCategoryChange() {
-    return this.selectedCategoryChange;
+    return this.#selectedCategoryChange;
   }
 
+  /**
+   * Sets the rounds-before-category-change value, limited to configured thresholds
+   *
+   * @param {number} roundsBeforeChange Requested number of round as category-change interval
+   * @returns {void}
+   */
   setCategoryChange(roundsBeforeChange) {
-    const newRoundsBeforeChange = Number(roundsBeforeChange);
+    const newValue = Number(roundsBeforeChange);
 
-    if (Number.isInteger(newRoundsBeforeChange)) {
-      if (
-        newRoundsBeforeChange >= CONFIG.MIN_ROUNDS &&
-        newRoundsBeforeChange <= CONFIG.MAX_ROUNDS
-      ) {
-        this.selectedCategoryChange = newRoundsBeforeChange;
-      } else if (newRoundsBeforeChange < CONFIG.MIN_ROUNDS) {
-        this.selectedCategoryChange = CONFIG.MIN_CATEGORY_CHANGE;
-      } else {
-        this.selectedCategoryChange = CONFIG.MAX_CATEGORY_CHANGE;
-      }
-    }
+    if (!Number.isInteger(newValue)) return;
+
+    this.#selectedCategoryChange = Math.min(
+      Math.max(newValue, CONFIG.MIN_CATEGORY_CHANGE),
+      CONFIG.MAX_CATEGORY_CHANGE,
+    );
   }
 
+  /**
+   * Increases the category-change interval by one, limited to configured thresholds.
+   * Returns the new number.
+   *
+   * @returns {number}
+   */
   increaseCategoryChange() {
-    if (this.selectedCategoryChange < CONFIG.MAX_CATEGORY_CHANGE) {
-      this.selectedCategoryChange = this.selectedCategoryChange + 1;
+    if (this.#selectedCategoryChange < CONFIG.MAX_CATEGORY_CHANGE) {
+      this.#selectedCategoryChange += 1;
     }
-    return this.selectedCategoryChange;
+    return this.#selectedCategoryChange;
   }
 
+  /**
+   * Decreases the category-change interval by one, limited to configured thresholds.
+   * Returns the new number.
+   *
+   * @returns {number}
+   */
   decreaseCategoryChange() {
-    if (this.selectedCategoryChange > CONFIG.MIN_CATEGORY_CHANGE) {
-      this.selectedCategoryChange = this.selectedCategoryChange - 1;
+    if (this.#selectedCategoryChange > CONFIG.MIN_CATEGORY_CHANGE) {
+      this.#selectedCategoryChange -= 1;
     }
-    return this.selectedCategoryChange;
+    return this.#selectedCategoryChange;
   }
 
-  async readExercisesFromDb() {
-    const categories = await this.selectedExerciseCategories;
+  /**
+   * Loads and sanitizes exercises from the database (JSON file)
+   *
+   * @returns {Promise<ExerciseEntityModel[]>}
+   */
+  async loadExercisesFromDb() {
+    const categories = await this.#selectedExerciseCategories;
+    const response = await fetch(CONFIG.EXERCISES_FILE);
+    const json = this.#sanitizeJSON(await response.json());
 
-    return fetch(CONFIG.EXERCISES_FILE)
-      .then((response) => response.json())
-      .then((json) => this.sanitizeJSONObject(json))
-      .then((json) => {
-        let exercises = [];
-        json.exercises.forEach((ex) => {
-          const category = categories.find(
-            (cat) => cat.getName() === ex.category,
-          );
+    return json.exercises.map((ex) => {
+      const category = categories.find((cat) => cat.getName() === ex.category);
 
-          exercises.push(
-            new ExerciseEntityModel(ex.name, ex.description, category),
-          );
-        });
-
-        return exercises;
-      });
+      return new ExerciseEntityModel(ex.name, ex.description, category);
+    });
   }
 
+  /**
+   * Generates a set of exercise based on the current workout configuration
+   *
+   * @returns {Promise<ExerciseEntityModel[]>}
+   * @throws {Error} String of error messages. Available if the configuration is invalid.
+   */
   async generateWorkout() {
-    const validation = await this.validateConfiguration();
+    const validation = await this.#validateConfiguration();
     if (!validation.isValid) {
       throw new Error(validation.errors);
     }
 
-    // Filter the exercises by category + shuffle relevant exercises
-    const selectedCategories = this.shuffleArray(
-      await this.selectedExerciseCategories,
-    );
+    // Shuffle the selected categories
+    const selectedCategories = this.#shuffleArray([
+      ...(await this.#selectedExerciseCategories),
+    ]);
 
-    // Create an array for each category with the exercises that are still available to choose from.
-    // "Still available" means that the exercises have not been included in the workout yet;
-    // at least in the last [category.length] exercises.
-    // Each array is initial filled during the first iteration of the corresponding category below.
-    const exercisesToChooseFrom = new Map();
-    selectedCategories.forEach((cat) => {
-      exercisesToChooseFrom.set(cat, []);
-    });
+    // Per category, create a map with an empty array that will be filled with selectable exercises
+    const exercisePool = new Map(selectedCategories.map((cat) => [cat, []]));
 
-    const workoutExercises = new Array(this.selectedExerciseRounds);
+    const workoutExercises = new Array(this.#selectedExerciseRounds);
     let filledRounds = 0;
     let currentCategoryIndex = 0;
 
@@ -155,33 +211,31 @@ export class WorkoutServiceModel {
       const currentCategory = selectedCategories[currentCategoryIndex];
       const roundsToFillForCurrentCategory = Math.min(
         workoutExercises.length - filledRounds,
-        this.selectedCategoryChange,
+        this.#selectedCategoryChange,
       );
 
       for (let i = 0; i < roundsToFillForCurrentCategory; i++) {
-        // When there are no more exercises to choose from,
-        // shuffle all exercises in the current category and refill the array with them.
-        // This occurs when the workout requires more exercises from the category than are available in the category.
-        if (exercisesToChooseFrom.get(currentCategory).length === 0) {
-          exercisesToChooseFrom
+        // If there are no more exercises available for the current category, refill the array
+        if (exercisePool.get(currentCategory).length === 0) {
+          exercisePool
             .get(currentCategory)
             .push(
-              ...(await this.availableExercises).filter((exercise) =>
-                exercise.category.equals(currentCategory),
+              ...(await this.#availableExercises).filter((exercise) =>
+                exercise.getCategory().equals(currentCategory),
               ),
             );
         }
 
-        // Randomly choose (and remove) an exercise from the array and add it to the workout series.
+        // Randomly pick an exercise from the pool and add it to the workout series
+        const poolCurrentCat = exercisePool.get(currentCategory);
         const exerciseChosenIndex = Math.floor(
-          Math.random() * exercisesToChooseFrom.get(currentCategory).length,
+          Math.random() * poolCurrentCat.length,
         );
 
-        const exerciseChosen = exercisesToChooseFrom
-          .get(currentCategory)
-          .splice(exerciseChosenIndex, 1)[0];
-
-        workoutExercises[filledRounds++] = exerciseChosen;
+        workoutExercises[filledRounds++] = poolCurrentCat.splice(
+          exerciseChosenIndex,
+          1,
+        )[0];
       }
 
       // Increment the category index
@@ -193,89 +247,93 @@ export class WorkoutServiceModel {
   }
 
   /**
-   * Sanitizes a string by escaping HTML entities.
+   * Recursively sanitizes strings inside a JSON-like object
    *
-   * @param {string} str - String to sanitize
-   * @returns {string} Sanitized string with HTML entities escaped
+   * @param {*} obj JSON-like object to sanitize
+   * @returns {*}
    * @private
    */
-  sanitizeJSON(str) {
-    return String(str)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#39;");
-  }
-
-  /**
-   * Recursively sanitizes all string values in a JSON object.
-   *
-   * @param {*} obj - Object, array, or primitive value to sanitize
-   * @returns {*} Sanitized version of the input with all strings escaped
-   * @private
-   */
-  sanitizeJSONObject(obj) {
+  #sanitizeJSON(obj) {
     if (typeof obj === "string") {
-      return this.sanitizeJSON(obj);
-    } else if (Array.isArray(obj)) {
-      return obj.map((item) => this.sanitizeJSONObject(item));
-    } else if (obj !== null && typeof obj === "object") {
+      return String(obj)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
+    }
+
+    if (Array.isArray(obj)) {
+      return obj.map((item) => this.#sanitizeJSON(item));
+    }
+
+    if (obj !== null && typeof obj === "object") {
       const sanitized = {};
+
       for (const key in obj) {
-        if (obj.hasOwnProperty(key)) {
-          sanitized[key] = this.sanitizeJSONObject(obj[key]);
+        if (Object.hasOwn(obj, key)) {
+          sanitized[key] = this.#sanitizeJSON(obj[key]);
         }
       }
+
       return sanitized;
     }
-    return obj; // Return as-is for non-string, non-object, non-array values
+
+    return obj;
   }
 
   /**
-   * Randomly shuffles array elements using Fisher-Yates algorithm.
-   * Modifies the original array in place.
+   * Shuffles an array in place
    *
-   * @param {Array} array - Array to shuffle
-   * @returns {Array} The same array reference, now shuffled
+   * @param {Array} array Array to shuffle
+   * @returns {Array}
+   * @private
    * @see {@link https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array}
-   * @example
-   * const numbers = [1, 2, 3, 4, 5];
-   * WorkoutService.shuffleArray(numbers); // numbers is now shuffled
    */
-  shuffleArray(array) {
+  #shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
+
       [array[i], array[j]] = [array[j], array[i]];
     }
+
     return array;
   }
 
-  async validateConfiguration() {
-    let errors = "";
-    const categories = await this.selectedExerciseCategories;
+  /**
+   * Validates the current workout configuration
+   *
+   * @returns {Promise<{isValid: boolean, errors: string}>}
+   */
+  async #validateConfiguration() {
+    const categories = await this.#selectedExerciseCategories;
+    const errors = [];
 
     if (!categories || categories.length === 0) {
-      errors += "Select at least one exercise category. ";
+      errors.push("Select at least one exercise category.");
     }
 
     if (
-      this.selectedExerciseRounds < CONFIG.MIN_ROUNDS ||
-      this.selectedExerciseRounds > CONFIG.MAX_ROUNDS
+      this.#selectedExerciseRounds < CONFIG.MIN_ROUNDS ||
+      this.#selectedExerciseRounds > CONFIG.MAX_ROUNDS
     ) {
-      errors += `Number of rounds must be between ${CONFIG.MIN_ROUNDS} and ${CONFIG.MAX_ROUNDS}. `;
+      errors.push(
+        `Number of rounds must be between ${CONFIG.MIN_ROUNDS} and ${CONFIG.MAX_ROUNDS}.`,
+      );
     }
 
     if (
-      this.selectedCategoryChange < CONFIG.MIN_CATEGORY_CHANGE ||
-      this.selectedCategoryChange > CONFIG.MAX_CATEGORY_CHANGE
+      this.#selectedCategoryChange < CONFIG.MIN_CATEGORY_CHANGE ||
+      this.#selectedCategoryChange > CONFIG.MAX_CATEGORY_CHANGE
     ) {
-      errors += `Rounds before category change must be between ${CONFIG.MIN_CATEGORY_CHANGE} and ${CONFIG.MAX_CATEGORY_CHANGE}. `;
+      errors.push(
+        `Rounds before category change must be between ${CONFIG.MIN_CATEGORY_CHANGE} and ${CONFIG.MAX_CATEGORY_CHANGE}.`,
+      );
     }
 
     return {
-      isValid: errors === "",
-      errors,
+      isValid: errors.length === 0,
+      errors: errors.join(" "),
     };
   }
 }
