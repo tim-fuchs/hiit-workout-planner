@@ -1,4 +1,4 @@
 import { WorkoutController } from "../workout/WorkoutController.js";
 
-// Initialize the UI controls
-const app = new WorkoutController();
+// Bootstraps the workout component
+new WorkoutController();

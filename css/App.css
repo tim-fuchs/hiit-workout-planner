@@ -1,6 +1,24 @@
+a {
+    text-decoration: none;
+}
+
+header.container {
+    padding-top: 4rem;
+}
+
+table.exercise-list {
+    width: 100%;
+    table-layout: fixed;
+}
+
+table.exercise-list td:first-child {
+    width: 3.5rem;
+}
+
 table.exercise-list td {
     font-size: xx-large;
     font-weight: bolder;
+    text-align: left;
 }
 
 .error-message {
